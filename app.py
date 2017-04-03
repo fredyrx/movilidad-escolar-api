@@ -27,8 +27,12 @@ def set_error(error=None):
 
 @auth.verify_password
 def verify_password(username_or_token, password):
-	return True
-
+        user_id = Cliente.verificar_auth_token(username_or_token)
+        if user_id:
+                return True
+        else:
+                return False
+                
 @auth.error_handler
 def unauthorized():
         message = {"success":False,"error":"Unauthorized access: "+request.url}
@@ -58,6 +62,12 @@ def login():
                 message = {"success":False,"error":"Usuario y/o clave incorrecto(s)"}
         message.update({"codigo":status_code})
         return make_response(jsonify(message),200)
+        
+@app.route("/api/test/token",methods=["GET","POST"])   
+@auth.login_required
+def test_token():
+        return jsonify({"success":"ok"},200)
+        
 
 if __name__ == "__main__":
         #reload(sys)

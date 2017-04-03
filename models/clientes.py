@@ -26,3 +26,17 @@ class Cliente(object):
         data = { c:user.__getattribute__(c) for c in Cliente.FILD_SIGNATURE }
         return s.dumps({"cliente":data})
     
+    @staticmethod
+    def verificar_auth_token(token):
+        s = Serializer(settings.SECRET_KEY)
+        try:
+            data = s.loads(token)
+        except SignatureExpired as e:
+            print "SignatureExpired:",e
+            return None
+        except BadSignature as e:
+            print "BadSignature:",e
+            return None
+        data_cliente = data["cliente"]
+
+        return data_cliente
