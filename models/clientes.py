@@ -4,10 +4,14 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 
 class Cliente(object):
-    FILD_SIGNATURE = ("username",)
+    FILD_SIGNATURE = ("codigo","username","nombres","paterno","materno")
     
-    def __init__(self,username):
+    def __init__(self,username, nombres="", paterno="", materno=""):
+        self.codigo = 1
         self.username = username
+        self.nombres = nombres
+        self.paterno = paterno
+        self.materno = materno
     
     def generar_token(self,expiration):
         return Cliente.generar_auth_token(user=self,expiration=expiration)
@@ -38,5 +42,14 @@ class Cliente(object):
             print "BadSignature:",e
             return None
         data_cliente = data["cliente"]
-
+        print data_cliente
         return data_cliente
+    
+    @staticmethod
+    def get(codigo):
+        c = Cliente("mprado@gmail.com")
+        c.codigo = codigo
+        c.nombres = "Marcos"
+        c.paterno = "Prado"
+        c.materno = "Garcia"
+        return c

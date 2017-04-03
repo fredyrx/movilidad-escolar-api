@@ -68,6 +68,21 @@ def login():
 def test_token():
         return jsonify({"success":"ok"},200)
         
+@app.route("/api/cliente/<string:codigo>",methods=["GET"])
+@auth.login_required
+def get_cliente(codigo):
+        if codigo.isdigit():
+                cliente = Cliente.get(codigo)
+                data = cliente.stringify()
+                status_code = 200
+                message = {"success":True,"error":"","data":data}
+        else:
+                status_code = 400 # bad request
+                message = {"success":False,"error":"Bad Request"}
+        message.update({"codigo":status_code})
+        return make_response(jsonify(message),200)
+
+
 
 if __name__ == "__main__":
         #reload(sys)
