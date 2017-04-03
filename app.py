@@ -6,6 +6,8 @@ from datetime import date, time, datetime
 from flask import Flask,request, Response, jsonify, url_for, json, make_response
 from flask_httpauth import HTTPBasicAuth
 
+from models.clientes import Cliente
+
 from settings import EXPIRATION_TOKEN, JSON_AS_ASCII
 
 auth = HTTPBasicAuth()
@@ -36,6 +38,26 @@ def unauthorized():
 @app.route("/",methods=["GET"])
 def index():
         return jsonify({'api':u'Movilidad Escolar v0.1'})
+        
+@app.route("/api/login",methods=["POST"])
+def login():
+        login_params = ('username','password')
+        credential = request.get_json()
+        cliente = Cliente.login(credential["username"],credential["password"])
+        if cliente:
+                print "#"*20, EXPIRATION_TOKEN
+                token = cliente.generar_token(expiration=EXPIRATION_TOKEN)
+                status_code = 200
+                message = {
+                        "success":True,
+                        "error":None,
+                        "token":token.decode("ascii"),
+                        "data":cliente.stringify()}
+        else:
+                status_code = 401
+                message = {"success":False,"error":"Usuario y/o clave incorrecto(s)"}
+        message.update({"codigo":status_code})
+        return make_response(jsonify(message),200)
 
 if __name__ == "__main__":
         #reload(sys)
