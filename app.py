@@ -40,7 +40,7 @@ def index():
 if __name__ == "__main__":
         #reload(sys)
         #sys.setdefaultencoding('utf8')
-        port = os.getenv("PORT", 8080)
+        port = int(os.getenv("PORT", 8080))
         ip = os.getenv("IP", "0.0.0.0")
         print " %s:%s" % (ip,port)
         app.run(debug=True,host=ip,port=port)
