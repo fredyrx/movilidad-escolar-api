@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS users(
 id serial,
 email varchar(50) unique,
-password varchar(50) not null,
+password_hash varchar(64) not null,
 active boolean default true,
 actived_at timestamp,
 created_at timestamp,
@@ -21,3 +21,5 @@ CREATE TABLE IF NOT EXISTS hashes(
  altered_at timestamp,
  primary key(id)
 )
+
+select * from users;
