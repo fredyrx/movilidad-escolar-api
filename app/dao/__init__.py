@@ -43,7 +43,7 @@ def basic_callproc(sp_name,params=list()):
 
 	return result.get_dict()
 
-def exec_query(query,params=list()):
+def execute(query,params=list(),has_result=True):
 	conn = None
 	result = QueryResponse()
 	try:
@@ -51,8 +51,11 @@ def exec_query(query,params=list()):
 		cur = conn.cursor()
 		cur.execute(query,params)
 		# Procesamos el resultado
-		rows = cur.fetchall()
-		result.set_data(rows)
+		if has_result:
+			rows = cur.fetchall()
+			result.set_data(rows)
+		else:
+			conn.commit()
 	except (Exception, psycopg2.DatabaseError) as error:
 		print(error)
 		result.set_error()
@@ -62,3 +65,10 @@ def exec_query(query,params=list()):
 			conn.close()
 
 	return result.get_dict()
+
+def exec_query(query,params=list()):
+	return execute(query,params,has_result=True)
+
+def exec_save(query,params=list()):
+	return execute(query,params,has_result=False)
+
