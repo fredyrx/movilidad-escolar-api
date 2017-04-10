@@ -6,7 +6,7 @@ from datetime import date, time, datetime
 from flask import Flask,request, Response, jsonify, url_for, json, make_response
 from flask_httpauth import HTTPBasicAuth
 
-from models.clientes import Cliente
+from models.clientes import Cliente, User
 
 from settings import EXPIRATION_TOKEN, JSON_AS_ASCII
 
@@ -42,6 +42,17 @@ def unauthorized():
 @app.route("/",methods=["GET"])
 def index():
         return jsonify({'api':u'Movilidad Escolar v0.1'})
+
+
+@app.route("/api/signup", methods=["POST"])
+def sign_up():
+        signup_params = ("email","password","pasword_confirm")
+        data = request.get_json()
+        print data["email"]
+        print data, "^"*20
+        user = User(**data)
+        message = {"success":True,"data":user.to_dict()}
+        return make_response(jsonify(message),200)
         
 @app.route("/api/login",methods=["POST"])
 def login():
