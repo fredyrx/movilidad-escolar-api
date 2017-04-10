@@ -2,6 +2,48 @@
 import settings
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
+from utils import generate_random_string, generate_hash
+
+class User(object):
+
+    def __init__(self, email, password, password_confirm=""):
+        self.email = email
+        self.password = password
+        self.password_confirm = password_confirm
+        self.password_hash = self.generate_password_hash()
+        self.random_link = self.generar_link_for_activate_account()
+
+    def generate_password_hash(self):
+        return generate_hash(self.password)
+
+    def generar_link_for_activate_account(self):
+        return generate_random_string(64)
+
+    def validate_password(self):
+        result = self.password == self.password_confirm 
+        return {
+            "result":result,
+            "message": "passwords not iquals" if result is False else ""
+        }
+
+    def validate_if_exists(self):
+        return False
+
+    def validate_format_email(self):
+        if "@" in self.password:
+            return True
+
+    def validate(self):
+        pass
+
+    def to_dict(self):
+        return self.__dict__
+
+
+    @staticmethod
+    def dalidate_password(pasword,password_confirm):
+        return password == password_confirm 
+
 
 class Cliente(object):
     FILD_SIGNATURE = ("codigo","username","nombres","paterno","materno")
