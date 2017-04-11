@@ -8,8 +8,9 @@ address varchar(100),
 latitude POINT,
 longitude POINT,
 logo varchar(250),
+active boolean default true,
 created_at timestamp default CURRENT_TIMESTAMP,
-alter_at timestamp default CURRENT_TIMESTAMP,
+altered_at timestamp default CURRENT_TIMESTAMP,
 primary key (id)
 );
 
@@ -22,7 +23,9 @@ license_category varchar(4)
 CREATE TABLE IF NOT EXISTS states(
 id char(2) primary key,
 name varchar(50) NOT NULL,
-order_number integer NOT NULL
+order_number integer NOT NULL,
+at_work boolean,
+active boolean default true
 );
 /* tablas */
 CREATE TABLE IF NOT EXISTS users(
@@ -33,7 +36,7 @@ name varchar(50),
 last_name varchar(50),
 active boolean default true,
 created_at timestamp default CURRENT_TIMESTAMP,
-alter_at timestamp default CURRENT_TIMESTAMP,
+altered_at timestamp default CURRENT_TIMESTAMP,
 primary key(id)
 );
 
@@ -45,7 +48,7 @@ license_number varchar(9),
 license_revalidation date,
 active boolean default true,
 created_at timestamp default CURRENT_TIMESTAMP,
-alter_at timestamp default CURRENT_TIMESTAMP,
+altered_at timestamp default CURRENT_TIMESTAMP,
 primary key(id)
 );
 
@@ -60,7 +63,7 @@ address varchar(50),
 latitude POINT,
 longitude POINT,
 created_at timestamp default CURRENT_TIMESTAMP,
-alter_at timestamp default CURRENT_TIMESTAMP,
+altered_at timestamp default CURRENT_TIMESTAMP,
 primary key(id)
 );
 /*
@@ -88,7 +91,7 @@ address varchar(50),
 latitude POINT,
 longitude POINT,
 created_at timestamp default CURRENT_TIMESTAMP,
-alter_at timestamp default CURRENT_TIMESTAMP,
+altered_at timestamp default CURRENT_TIMESTAMP,
 primary key(id)
 );
 
@@ -101,8 +104,9 @@ dependant_id integer REFERENCES dependents(id),
 school_id integer REFERENCES schools(id),
 start_date date,
 end_date date,
+active boolean default true,
 created_at timestamp default CURRENT_TIMESTAMP,
-alter_at timestamp default CURRENT_TIMESTAMP,
+altered_at timestamp default CURRENT_TIMESTAMP,
 primary key(id)
 );
 
@@ -110,9 +114,8 @@ CREATE TABLE IF NOT EXISTS services(
 driver_id integer REFERENCES drivers(id),
 service_date date,
 state_id char(2) REFERENCES states(id),
-active boolean default true,
 created_at timestamp default CURRENT_TIMESTAMP,
-modified_at timestamp default CURRENT_TIMESTAMP,
+altered_at timestamp default CURRENT_TIMESTAMP,
 primary key(driver_id,service_date)
 );
 
@@ -125,7 +128,7 @@ audit_latitude POINT,
 audit_longitude POINT,
 audit_precision numeric,
 created_at timestamp default CURRENT_TIMESTAMP,
-modified_at timestamp default CURRENT_TIMESTAMP,
+altered_at timestamp default CURRENT_TIMESTAMP,
 primary key(driver_id, service_date, state_id)
 );
 
@@ -140,7 +143,7 @@ audit_latitude POINT,
 audit_longitude POINT,
 audit_precision numeric,
 created_at timestamp default CURRENT_TIMESTAMP,
-modified_at timestamp default CURRENT_TIMESTAMP,
+altered_at timestamp default CURRENT_TIMESTAMP,
 primary key(driver_id, service_date, state_id, depentant_id),
 foreign key (driver_id, service_date, state_id) REFERENCES service_header(driver_id, service_date, state_id)
 );
@@ -149,4 +152,4 @@ foreign key (driver_id, service_date, state_id) REFERENCES service_header(driver
 --select * from users;
 
 
-select now(), CURRENT_TIMESTAMP, CURRENT_TIME, CURRENT_DATE, 5.656
+--select now(), CURRENT_TIMESTAMP, CURRENT_TIME, CURRENT_DATE, 5.656
